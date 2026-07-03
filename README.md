@@ -1,28 +1,29 @@
+
+Readme · MD
 # Society Maintenance Tracker
-
+ 
 A full-stack web application for managing apartment society maintenance complaints. Residents can raise and track complaints with photos, admins manage them through a workflow with priorities, and everyone stays informed through a notice board and email updates.
-
+ 
 ---
-
+ 
 ## Live Demo
-
-- **Frontend:**  https://society-maintenance-tracker-indol.vercel.app
+ 
+- **Frontend:** https://society-maintenance-tracker-indol.vercel.app
 - **Backend:** https://society-maintenance-tracker-4uhi.onrender.com
 ---
-
+ 
 ## Demo Credentials
-
+ 
 ### Resident Account
 - **Email:** harshshuklaa1104@gmail.com
 - **Password:** demo1234
-
 ### Admin Account
 - **Email:** admin@demo.com
 - **Password:** demo1234
 ---
-
+ 
 ## Tech Stack
-
+ 
 | Layer | Technology |
 |---|---|
 | Frontend | React + Vite |
@@ -30,20 +31,19 @@ A full-stack web application for managing apartment society maintenance complain
 | Database | MongoDB + Mongoose |
 | Auth | JWT (role-based) |
 | Photo Upload | Cloudinary |
-| Email | Nodemailer + Gmail SMTP |
+| Email | Resend API |
 | Hosting | Vercel (frontend) + Render (backend) |
-
+ 
 ---
-
+ 
 ## Features
-
+ 
 ### Resident
 - Register and login
 - Raise a complaint with category, description, and optional photo
 - View all own complaints with full status history (timestamp + note per change)
 - Receive email on status change
 - View notice board
-
 ### Admin
 - View all complaints with filters (category, status, date)
 - Set priority: Low, Medium, High
@@ -52,11 +52,10 @@ A full-stack web application for managing apartment society maintenance complain
 - Post notices to notice board (pin important ones)
 - Send email to all residents on important notice
 - View dashboard: complaints by status, by category, overdue count
-
 ---
-
+ 
 ## Project Structure
-
+ 
 ```
 society-maintenance-tracker/
 ├── backend/
@@ -103,59 +102,58 @@ society-maintenance-tracker/
 │       └── App.jsx
 └── README.md
 ```
-
+ 
 ---
-
+ 
 ## Setup Guide
-
+ 
 ### Prerequisites
 - Node.js v18+
 - MongoDB (local or Atlas)
 - Cloudinary account (free)
-- Gmail account with App Password enabled
-
+- Resend account (free) — https://resend.com
 ### 1. Clone the repository
-
+ 
 ```bash
-git clone https://github.com/yourusername/society-maintenance-tracker.git
+git clone https://github.com/harshhgithub/Society-Maintenance-Tracker.git
 cd society-maintenance-tracker
 ```
-
+ 
 ### 2. Backend Setup
-
+ 
 ```bash
 cd backend
 npm install
 ```
-
+ 
 Create a `.env` file in the `backend/` folder (see `.env.example`):
-
+ 
 ```bash
 cp .env.example .env
 ```
-
+ 
 Fill in your values and start the server:
-
+ 
 ```bash
 node server.js
 ```
-
+ 
 ### 3. Frontend Setup
-
+ 
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
+ 
 Open `http://localhost:5173` in your browser.
-
+ 
 ---
-
+ 
 ## Environment Variables
-
+ 
 Create a `.env` file in the `backend/` folder with the following:
-
+ 
 ```
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/society_tracker
@@ -163,20 +161,21 @@ JWT_SECRET=your_jwt_secret_key
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASS=your_gmail_app_password
+RESEND_API_KEY=your_resend_api_key
 ```
-
+ 
+> **Note on Email:** This project uses [Resend](https://resend.com) for email delivery instead of Nodemailer + Gmail SMTP. Render's free tier blocks outgoing SMTP ports (465/587), so Resend is used as it sends emails over HTTPS which works on all hosting platforms. Sign up at resend.com and get a free API key (3000 emails/month free).
+ 
 ---
-
+ 
 ## API Documentation
-
+ 
 ### Auth Routes
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
 | POST | /api/auth/register | Register a new user | Public |
 | POST | /api/auth/login | Login and get JWT token | Public |
-
+ 
 ### Complaint Routes
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
@@ -185,22 +184,22 @@ EMAIL_PASS=your_gmail_app_password
 | GET | /api/complaints/all | Get all complaints with filters | Admin |
 | PUT | /api/complaints/:id/status | Update complaint status | Admin |
 | PUT | /api/complaints/:id/priority | Set complaint priority | Admin |
-
+ 
 ### Notice Routes
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
 | POST | /api/notices | Post a new notice | Admin |
 | GET | /api/notices | Get all notices (pinned first) | All |
-
+ 
 ### Admin Routes
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
 | GET | /api/admin/dashboard | Get dashboard stats | Admin |
-
+ 
 ---
-
+ 
 ## Database Schema
-
+ 
 ### Users Collection
 ```json
 {
@@ -213,7 +212,7 @@ EMAIL_PASS=your_gmail_app_password
   "updatedAt": "Date"
 }
 ```
-
+ 
 ### Complaints Collection
 ```json
 {
@@ -238,7 +237,7 @@ EMAIL_PASS=your_gmail_app_password
   "updatedAt": "Date"
 }
 ```
-
+ 
 ### Notices Collection
 ```json
 {
@@ -251,16 +250,26 @@ EMAIL_PASS=your_gmail_app_password
   "updatedAt": "Date"
 }
 ```
-
+ 
 ---
-
+ 
 ## Overdue Detection
-
+ 
 The cron job runs every night at midnight and checks for complaints that:
 - Are not resolved
 - Were created more than `OVERDUE_DAYS` days ago (default: 7)
-
 To change the threshold, update this line in `backend/utils/cronJobs.js`:
 ```javascript
 const OVERDUE_DAYS = 7; // change this value
 ```
+ 
+---
+ 
+## Email Service
+ 
+This project uses **Resend** for transactional emails. Emails are sent in two cases:
+- When a complaint status is updated → resident receives an email
+- When an admin posts an important notice → all residents receive an email
+Resend was chosen over Nodemailer + Gmail SMTP because Render's free hosting tier blocks outgoing SMTP ports. Resend uses HTTPS for email delivery which works on all platforms without any port restrictions.
+ 
+---
