@@ -13,7 +13,7 @@ A full-stack web application for managing apartment society maintenance complain
 ## Demo Credentials
 
 ### Resident Account
-- **Email:** resident@demo.com
+- **Email:** harshshuklaa1104@gmail.com
 - **Password:** demo1234
 
 ### Admin Account
