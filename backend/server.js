@@ -7,16 +7,19 @@ require('./utils/cronJobs');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: 'https://society-maintenance-tracker-indol.vercel.app',
+  credentials: true
+}));
+
 app.use(express.json());
 
-// Routes (we'll create these next)
-app.use('/api/auth', require('./routes/authRoutes.js'));
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/complaints', require('./routes/complaintRoutes'));
 app.use('/api/notices', require('./routes/noticeRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
