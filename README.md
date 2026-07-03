@@ -10,6 +10,16 @@ A full-stack web application for managing apartment society maintenance complain
 - **Backend:** https://society-maintenance-tracker-4uhi.onrender.com
 ---
 
+## Demo Credentials
+
+### Resident Account
+- **Email:** resident@demo.com
+- **Password:** demo1234
+
+### Admin Account
+- **Email:** admin@demo.com
+- **Password:** demo1234
+
 ## Tech Stack
 
 | Layer | Technology |
