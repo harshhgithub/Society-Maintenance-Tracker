@@ -77,7 +77,7 @@ The photo field is optional. If no photo is attached, the photoUrl field is stor
 
 The system sends email notifications to residents in two situations: when their complaint status changes, and when an admin posts an important notice.
 
-Email is handled by Nodemailer configured with Gmail SMTP using an App Password for authentication. The email utility is a simple async function that wraps the Nodemailer transporter and is imported wherever notifications are needed.
+Email is handled by Resend, a transactional email API that sends emails over HTTPS. This was chosen over Nodemailer with Gmail SMTP because the production hosting platform (Render) blocks outgoing SMTP ports (465/587) on its free tier. Resend operates entirely over HTTPS port 443 which is never blocked, making it reliable across all hosting environments. The email utility is a simple async function that wraps the Resend SDK and is imported wherever notifications are needed.
 
 **Status Change Notification**
 
@@ -98,7 +98,7 @@ When an admin posts a notice marked as important, the backend fetches all users 
 Admin posts important notice
   → Notice saved to database
   → All residents fetched
-  → Email sent to each resident
+  → Email sent to each resident via Resend API
 ```
 
 Non-important notices are posted to the notice board without triggering any emails. Important notices are additionally pinned to the top of the notice board using the isPinned flag, sorted descending so pinned notices always appear first regardless of when they were posted.
@@ -109,4 +109,4 @@ The notification system is intentionally kept simple and synchronous within the 
 
 ## Summary
 
-The four design decisions work together to deliver a complete complaint management system. Embedded history gives instant access to the full audit trail. The nightly cron keeps overdue detection automatic and configurable. The Multer-to-Cloudinary pipeline keeps the server stateless with respect to images. And the Nodemailer integration keeps residents informed at every step without requiring a third-party email service subscription.
+The four design decisions work together to deliver a complete complaint management system. Embedded history gives instant access to the full audit trail. The nightly cron keeps overdue detection automatic and configurable. The Multer-to-Cloudinary pipeline keeps the server stateless with respect to images. And the Resend API integration keeps residents informed at every step while remaining compatible with all hosting platforms.
