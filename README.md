@@ -1,5 +1,3 @@
-
-Readme · MD
 # Society Maintenance Tracker
  
 A full-stack web application for managing apartment society maintenance complaints. Residents can raise and track complaints with photos, admins manage them through a workflow with priorities, and everyone stays informed through a notice board and email updates.
