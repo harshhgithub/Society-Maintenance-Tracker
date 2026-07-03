@@ -6,8 +6,7 @@ A full-stack web application for managing apartment society maintenance complain
 
 ## Live Demo
 
-- **Frontend:** (Add Vercel URL here)
-- **Backend API:** (Add Render URL here)
+- **Frontend:**  https://society-maintenance-tracker-indol.vercel.app
 
 ---
 
