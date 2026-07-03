@@ -19,6 +19,7 @@ A full-stack web application for managing apartment society maintenance complain
 ### Admin Account
 - **Email:** admin@demo.com
 - **Password:** demo1234
+---
 
 ## Tech Stack
 
